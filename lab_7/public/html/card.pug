@@ -1,0 +1,35 @@
+extends layout
+block content
+  h1.w3-center Book card
+  form.w3-auto(method = "post", action="/api/books/"+book.isbn+'?_method=PUT')
+                .w3-input
+                    label(for="title") title
+                    input.w3-input(type="text" name="title")
+                .w3-input
+                    label(for="author") author
+                    input.w3-input(type="text" name="author")
+                .w3-input
+                    label(for="published") published
+                    input.w3-input(type="text" name="published")
+                input.w3-button(type="submit" value="change book")
+  div.w3-container.w3-border.w3-auto
+    h3 #{book.title}
+        span
+            - let isbn = book.isbn 
+            form(method='post' action='/api/books/'+isbn+'?_method=DELETE')
+                button.w3-right.fa.fa-trash(type="submit")
+    h4 #{book.subtitle}
+    p by #{book.author}
+    p #{book.publisher}
+    p published: #{book.published}
+    p#isbn ISBN: #{book.isbn}
+    hr
+    if !book.available
+        h4 TAKEN BY #{book.customer}
+            span.w3-right return by #{book.return} 
+        - let utc = new Date();
+        - let date = new Date(book.return);
+        - if (utc > date)
+            h3.w3-right EXPIRED
+    else 
+        h4 AVAILABLE

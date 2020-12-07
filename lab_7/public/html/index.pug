@@ -1,0 +1,58 @@
+extends layout
+
+block content
+    .w3-container.w3-auto
+            h1.w3-center books
+            form.mb-4(action="/api/books", method="POST")
+                .w3-input
+                    label(for="title") title
+                    input.w3-input(type="text" name="title")
+                .w3-input
+                    label(for="subtitle") subtitle
+                    input.w3-input(type="text" name="subtitle")
+                .w3-input
+                    label(for="author") author
+                    input.w3-input(type="text" name="author")
+                .w3-input
+                    label(for="publisher") publisher
+                    input.w3-input(type="text" name="publisher")
+                input.w3-button(type="submit" value="add book")
+            h4.w3-center book list
+            .w3-left
+                span
+                    form(method="get" action="/available/true")
+                        input.w3-button(type='submit' value="AVAILABLE")
+                span    
+                    form(method="get" action="/")
+                        input.w3-button(type='submit' value="ALL BOOKS")
+            table.w3-table-all(width="100%", border='1')
+                each book in books
+                    tr
+                        td
+                            a(href="/card/"+book.isbn)
+                                div.w3-container
+                                    h3 #{book.title}
+                                        span
+                                            - let isbn = book.isbn 
+                                            form(method='post' action='/api/books/'+isbn+'?_method=DELETE')
+                                                button.w3-right.fa.fa-trash(type="submit")
+                                    h4 #{book.subtitle}
+                                    p by #{book.author}
+                                    p #{book.publisher}
+                                    p#isbn ISBN: #{book.isbn}
+                                    hr
+                                    if !book.available
+                                        h4 TAKEN BY #{book.customer}
+                                            span.w3-right return by #{book.return} 
+                                        - let utc = new Date();
+                                        - let date = new Date(book.return);
+                                        - if (utc > date)
+                                            h3.w3-right EXPIRED
+                                    else 
+                                        h4 AVAILABLE
+    script(type='text/javascript' src="../js/app.js")
+    
+    
+                                
+                 
+            
